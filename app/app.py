@@ -108,7 +108,7 @@ with right_col:
     )
     online_security = st.selectbox(
         "Online Security",
-        ["yes", "No", "No internet service"]
+        ["Yes", "No", "No internet service"]
     )
     online_backup = st.selectbox(
         "Online Backup",
@@ -116,7 +116,7 @@ with right_col:
     )
     device_protection = st.selectbox(
         "Device Protection",
-        ["yes", "No", "No internet service"]
+        ["Yes", "No", "No internet service"]
     )
     tech_support = st.selectbox(
         "Tech Support",
@@ -147,9 +147,56 @@ with right_col:
         step = 10.0
     )
 
+st.divider()
 predict_button = st.button(
     "Predict Customer Churn"
 )
+st.divider()
 
 if predict_button:
-    st.write("Inputs captured successfully")
+    customer = pd.DataFrame({
+        "gender": [gender],
+        "SeniorCitizen": [1 if senior_citizen == "Yes" else 0],
+        "Partner": [partner],
+        "Dependents": [dependents],
+        "tenure": [tenure],
+        "PhoneService": [phone_service],
+        "MultipleLines": [multiple_lines],
+        "InternetService": [internet_service],
+        "OnlineSecurity": [online_security],
+        "OnlineBackup": [online_backup],
+        "DeviceProtection": [device_protection],
+        "TechSupport": [tech_support],
+        "StreamingTV": [streaming_tv],
+        "StreamingMovies": [streaming_movies],
+        "Contract": [contract],
+        "PaperlessBilling": [paperless_billing],
+        "PaymentMethod": [payment_method],
+        "MonthlyCharges": [monthly_charges],
+        "TotalCharges": [total_charges]
+    })
+
+    result = predict_customer(
+        model,
+        customer
+    )
+    probability = result["probability"]
+    if result["prediction"] == 1:
+        st.error("⚠️ Customer is likely to churn.")
+
+    else:
+        st.success("✅ Customer is likely to stay.")
+
+    st.metric(
+        label = "Churn Probability",
+        value = f"{probability:.2%}"
+    )
+    if probability >= 0.80:
+        st.warning("High Confidence Prediction")
+    elif probability >= 0.60:
+        st.info("Moderate Confidence Prediction")
+    else:
+        st.success("Low Risk Customer")
+    
+    with st.expander("Customer Details"):
+        st.dataframe(customer)
