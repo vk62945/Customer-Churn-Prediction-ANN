@@ -3,7 +3,7 @@ import pandas as pd
 
 from tensorflow.keras.models import load_model
 
-from config import (
+from src.config import (
     MODEL_FILE,
     THRESHOLD
 )
