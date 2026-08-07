@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import LabelEncoder
 
-from config import(
+from src.config import(
     DATASET_FILE,
     DROP_COLUMNS,
     TARGET_COLUMN,
@@ -72,6 +72,7 @@ def preprocess_data():
     x, y = split_features_target(df)
     y, label_encoder = encode_target(y)
     x = encode_features(x)
+    feature_columns = x.columns.tolist()
     x_train, x_test, y_train, y_test = split_data(x, y)
     x_train, x_test, scaler = scale_features(
         x_train, x_test
@@ -80,7 +81,7 @@ def preprocess_data():
     return (
         x_train, x_test, y_train, y_test,
         scaler,
-        label_encoder
+        label_encoder, feature_columns
     )
 
 if __name__ == "__main__":

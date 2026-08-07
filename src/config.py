@@ -10,6 +10,8 @@ MODEL_PATH = PROJECT_ROOT / "models"
 # Dataset File and Model File
 DATASET_FILE = RAW_DATA_PATH / "WA_Fn-UseC_-Telco-Customer-Churn.csv"
 MODEL_FILE = MODEL_PATH / "best_ann_model.keras"
+SCALER_FILE = MODEL_PATH / "scaler.pkl"
+FEATURE_COLUMNS_FILE = MODEL_PATH / "feature_columns.pkl"
 
 # Training Parameters
 RANDOM_STATE = 42

@@ -1,5 +1,5 @@
 import tensorflow as tf
-
+import joblib 
 from tensorflow.keras.models import Sequential
 
 from tensorflow.keras.layers import (
@@ -17,12 +17,14 @@ from tensorflow.keras.callbacks import (
 
 from preprocess import preprocess_data
 
-from config import (
+from src.config import (
     HIDDEN_LAYERS,
     LEARNING_RATE,
     DROPOUT_1,
     DROPOUT_2,
     MODEL_FILE,
+    SCALER_FILE,
+    FEATURE_COLUMNS_FILE,
     EPOCHS,
     BATCH_SIZE,
     VALIDATION_SPLIT
@@ -96,8 +98,16 @@ def train_model():
         y_test,
         scaler,
         label_encoder,
+        feature_columns
     ) = preprocess_data()
-
+    joblib.dump(
+        scaler,
+        SCALER_FILE
+    )
+    joblib.dump(
+        feature_columns,
+        FEATURE_COLUMNS_FILE
+    )
     model = build_model(x_train.shape[1])
 
     history = model.fit(

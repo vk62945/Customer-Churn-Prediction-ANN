@@ -1,35 +1,57 @@
 import numpy as np 
 import pandas as pd
-
+import joblib
+import tensorflow as tf
 from tensorflow.keras.models import load_model
 
 from src.config import (
     MODEL_FILE,
-    THRESHOLD
+    THRESHOLD,
+    FEATURE_COLUMNS_FILE,
+    SCALER_FILE
 )
 
 def load_trained_model():
     model = load_model(MODEL_FILE)
     return model 
 
-def predict_customer(model, input_data):
-    if isinstance(input_data, list):
-        input_data = np.array(input_data)
+def load_scaler():
+    return joblib.load(SCALER_FILE)
 
-    #Ensure numpy array
-    input_data = np.asarray(input_data)
+def load_feature_columns():
+    return joblib.load(FEATURE_COLUMNS_FILE)
 
-    #Reshape for single prediction
-    input_data = input_data.reshape(1,-1)
+def preprocess_input(input_df):
+    scaler = load_scaler()
+    feature_columns = load_feature_columns()
+    input_df = pd.get_dummies(
+        input_df,
+        drop_first = True
+    )
+    #Align Columns
+    input_df = input_df.reindex(
+        columns = feature_columns,
+        fill_value=0
+    )
 
-    #Predict probability
-    probability = model.predict(
-        input_data,
-        verbose = 0
-    )[0][0]
+    input_scaled = scaler.transform(
+        input_df
+    )
 
+    return input_scaled
+
+def predict_customer(model, input_df):
+    processed_input = preprocess_input(input_df)
+    processed_input = tf.convert_to_tensor(
+        processed_input,
+        dtype=tf.float32
+    )
+
+    probability = model(
+        processed_input,
+        training=False
+    ).numpy()[0][0]
     prediction = int(probability >= THRESHOLD)
-
     return {
         "prediction": prediction,
         "probability": round(float(probability),4)

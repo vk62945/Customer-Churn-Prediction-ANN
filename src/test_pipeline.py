@@ -27,7 +27,7 @@ print("="*60)
 model = load_trained_model()
 print("Model Loaded Successfully")
 
-# Prediction
+#Prediction
 y_prob = model.predict(
     x_test,
     verbose = 0
@@ -47,7 +47,7 @@ print_classification_report(y_test, y_pred)
 plot_confusion_matrix(y_test, y_pred)
 
 # Test Single Prediction
-sample = x_test[10]
+sample = x_test[0]
 result = predict_customer(model, sample)
 print(result)
 
