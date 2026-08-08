@@ -217,15 +217,46 @@ if predict_button:
     
     prediction = result["prediction"]
     probability = result["probability"]
-
+    risk_factors = []
+    if contract == "Month-to-month":
+        risk_factors.append(
+            "Month-to-month contracts generally have higher churn risk."
+        )
+    if tenure < 12:
+        risk_factors.append(
+            "Short customer tenure may indicate weaker customer loyalty."
+        )
+    if internet_service == "Fiber optic":
+        risk_factors.append(
+            "Fiber optic customers have historically shown higher churn rates."
+        )
+    if monthly_charges > 80:
+        risk_factors.append(
+            "Higher monthly charges may increase churn risk."
+        )
+    if tech_support == "No":
+        risk_factors.append(
+            "Customers without technical support tend to churn more frequently."
+        )
+    if online_security == "No":
+        risk_factors.append(
+            "Customers without online security services are often at higher risk."
+        )
+    
     with result_container:
         st.subheader("🎯 Prediction Results")
         if prediction == 1:
             st.error("⚠ Customer is likely to churn.")
             st.progress(probability)
+            st.caption(
+                f"Model estimates a {probability:.1%} chance of churn."
+            )
         else:
             st.success("✅ Customer Likely to Stay")
             st.progress(probability)
+            st.caption(
+                f"Model estimates a {probability:.1%} chance of churn."
+            )
 
         col1, col2 = st.columns(2)
         with col1:
@@ -250,29 +281,62 @@ if predict_button:
         if prediction == 1:
             st.warning("""
             ### Recommendation
-
             • Contact the customer.
-
             • Offer retention discounts.
-
             • Review current service plan.
-
             • Provide loyalty benefits.
             """)
         else:
             st.info("""
             ### Recommendation
-
             • Customer appears satisfied.
-
             • Continue current engagement.
-
             • Monitor periodically.
             """)
-    
-    with st.expander("📋 Customer Information Entered"):
-        st.dataframe(customer)
+    st.divider()
+
+    with st.expander("📖 Why did the model predict this?", expanded=False):
+
+        st.markdown("### 📊 Prediction Summary")
+        st.markdown("### ⚠ Risk Factors")
+
+        if len(risk_factors) > 0:
+            for factor in risk_factors:
+                st.write(f"• {factor}")
+        else:
+            st.success(
+                "No major churn risk indicators were identified based on the provided customer profile."
+            )
+        st.divider()
+        st.markdown("### 👤 Customer Summary")
+        col1, col2 = st.columns(2)
+        with col1:
+            st.write(f"**Gender:** {gender}")
+            st.write(f"**Senior Citizen:** {senior_citizen}")
+            st.write(f"**Partner:** {partner}")
+            st.write(f"**Dependents:** {dependents}")
+            st.write(f"**Tenure:** {tenure} months")
+        with col2:
+            st.write(f"**Contract:** {contract}")
+            st.write(f"**Internet Service:** {internet_service}")
+            st.write(f"**Payment Method:** {payment_method}")
+            st.write(f"**Monthly Charges:** ${monthly_charges:.2f}")
+            st.write(f"**Total Charges:** ${total_charges:.2f}")
+
+        st.divider()
+        st.caption("Customer information used for prediction")
+        st.dataframe(
+            customer,
+            use_container_width=True
+        )
+    st.download_button(
+        label = "📄 Download Prediction Report",
+        data = customer.to_csv(index=False),
+        file_name="customer_prediction.csv",
+        mime="text/csv"
+    )
 # st.divider()
 st.caption(
-    "Developed using TensorFlow • Streamlit • Scikit-Learn • Python"
+    "Developed using TensorFlow • Streamlit • Scikit-Learn • Python  \n"
+    "© 2026 Vivek Kumar"
 )
