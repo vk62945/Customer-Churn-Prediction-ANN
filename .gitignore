@@ -4,7 +4,6 @@ __pycache__/
 .DS_Store
 .ipynb_checkpoints/
 
-models/*.keras
 models/*.h5
 
 .env
