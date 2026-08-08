@@ -60,6 +60,9 @@ AWS Data Engineer
 
 AI Engineer Aspirant
 """)
+st.sidebar.divider()
+st.sidebar.caption("Version 1.0.0 | Last Updated: Aug 2026")
+
 
 with st.container(border=True):
     st.subheader("📊 Model Performance")
@@ -184,9 +187,36 @@ with st.form("prediction_form"):
     )
 st.divider()
 
-result_container = st.container()
 if predict_button:
     st.toast("Customer profile received.")
+
+    if(phone_service == "No" and multiple_lines == "Yes"):
+        st.error("A customer without phone service cannot have multiple lines.")
+        st.stop()
+    if internet_service == "No":
+        invalid_services = [
+            online_security,
+            online_backup,
+            device_protection,
+            tech_support,
+            streaming_tv,
+            streaming_movies
+        ]
+        if "Yes" in invalid_services:
+            st.error(
+                "Customers without internet service cannot subscribe to internet-related services."
+            )
+            st.stop()
+    if monthly_charges == 0:
+        st.warning(
+            "Monthly charges are unusually low. Please verify the entered value."
+        )
+    expected_total = tenure * monthly_charges
+    if tenure > 12 and total_charges < (0.25 * expected_total):
+        st.warning(
+            "Total charges appear unusually low compared to tenure and monthly charges."
+        )
+
     customer = pd.DataFrame({
         "gender": [gender],
         "SeniorCitizen": [1 if senior_citizen == "Yes" else 0],
@@ -208,15 +238,30 @@ if predict_button:
         "MonthlyCharges": [monthly_charges],
         "TotalCharges": [total_charges]
     })
+    report = customer.copy()
     with st.spinner("Analyzing customer profile..."):
         time.sleep(1)
-        result = predict_customer(
-            model,
-            customer
-        )
-    
+        try:
+            result = predict_customer(
+                model,
+                customer
+            )
+        except Exception as e:
+            st.error(
+                "Prediction failed"
+            )
+            st.exception(e)
+            st.stop()
+    if result is None:
+        st.error("Prediction could not be generated.")
+        st.stop()
+    st.toast("✅ Prediction completed successfully!")
     prediction = result["prediction"]
     probability = result["probability"]
+    report["Prediction"] = (
+        "Churn" if prediction else "No Churn"
+    )
+    report["Probability"] = probability * 100
     risk_factors = []
     if contract == "Month-to-month":
         risk_factors.append(
@@ -242,7 +287,7 @@ if predict_button:
         risk_factors.append(
             "Customers without online security services are often at higher risk."
         )
-    
+    result_container = st.container()
     with result_container:
         st.subheader("🎯 Prediction Results")
         if prediction == 1:
@@ -277,6 +322,7 @@ if predict_button:
                 "Risk Level",
                 risk
             )
+            report["Risk"] = risk
         st.divider()
         if prediction == 1:
             st.warning("""
@@ -324,18 +370,25 @@ if predict_button:
             st.write(f"**Total Charges:** ${total_charges:.2f}")
 
         st.divider()
-        st.caption("Customer information used for prediction")
-        st.dataframe(
-            customer,
-            use_container_width=True
-        )
+        with st.expander("Customer information used for prediction", expanded=False):
+            st.dataframe(
+                customer,
+                use_container_width=True
+            )
     st.download_button(
         label = "📄 Download Prediction Report",
-        data = customer.to_csv(index=False),
+        data = report.to_csv(index=False),
         file_name="customer_prediction.csv",
         mime="text/csv"
     )
-# st.divider()
+st.info(
+    """
+ℹ️ **Disclaimer**
+
+This prediction is generated using a trained Artificial Neural Network and is intended to support business decision-making. It should not be used as the sole basis for customer retention decisions.
+"""
+)    
+st.divider()
 st.caption(
     "Developed using TensorFlow • Streamlit • Scikit-Learn • Python  \n"
     "© 2026 Vivek Kumar"
