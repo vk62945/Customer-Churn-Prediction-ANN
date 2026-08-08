@@ -120,8 +120,17 @@ streamlit run app/app.py
 ```
 
 ## 📸 Application Screenshots
+### 🏠 Homepage
 
-*(Coming in Phase 9.7.3)*
+![Homepage](screenshots/homepage.png)
+### 🎯 Prediction Result
+
+![Prediction](screenshots/high_churn_prediction.png)
+
+### 📊 Prediction Insights
+
+![Insights](screenshots/prediction_insights.png)
+
 
 ## 🚀 Future Improvements
 
