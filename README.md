@@ -101,7 +101,9 @@ Customer-Churn-Prediction-ANN/
 ```
 
 ## ⚙️ Installation
-git clone ...
+
+```bash
+git clone -b development https://github.com/vk62945/Customer-Churn-Prediction-ANN.git
 
 cd Customer-Churn-Prediction-ANN
 
@@ -138,14 +140,6 @@ streamlit run app/app.py
 
 - Database integration
 
-## 👨‍💻 Author
-
-Vivek Kumar
-
-AWS Data Engineer
-
-AI Engineer Aspirant
-
 ## 💼 Business Impact
 
 The optimized ANN model focuses on maximizing Recall and F1 Score to identify customers who are at risk of churning.
@@ -156,3 +150,11 @@ By identifying potential churners earlier, businesses can:
 - Reduce revenue loss
 - Prioritize retention campaigns
 - Make proactive customer engagement decisions
+
+## 👨‍💻 Author
+
+Vivek Kumar
+
+AWS Data Engineer
+
+AI Engineer Aspirant
