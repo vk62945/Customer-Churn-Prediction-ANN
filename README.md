@@ -2,13 +2,7 @@
 
 An end-to-end Deep Learning project that predicts customer churn using an optimized Artificial Neural Network (ANN) built with TensorFlow/Keras and deployed with Streamlit.
 
-![Python](https://img.shields.io/badge/Python-3.13-blue)
-
-![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange)
-
-![Streamlit](https://img.shields.io/badge/Streamlit-Deployed-red)
-
-![License](https://img.shields.io/badge/License-MIT-green)
+![Python](https://img.shields.io/badge/Python-3.13-blue) ![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange) [![Live Demo](https://img.shields.io/badge/Streamlit-Live_App-red)](https://customer-churn-prediction-ann-ai.streamlit.app/) ![License](https://img.shields.io/badge/License-MIT-green)
 
 ## 📚 Table of Contents
 
@@ -40,9 +34,9 @@ The project includes:
 - Streamlit deployment
 - Business recommendations
 
-## 🌐 Live Demo
+## 🚀 Live Demo
 
-👉 https://your-streamlit-app-url.streamlit.app
+[![Live Demo](https://img.shields.io/badge/🚀%20Live%20Demo-Streamlit-red?style=for-the-badge)](https://customer-churn-prediction-ann-ai.streamlit.app/)
 
 ## ✨ Features
 
